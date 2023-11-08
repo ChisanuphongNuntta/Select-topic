@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>โปรแกรมการวิเคราะห์ความรู้สึกจาก ข้อคิดเห็นบนยูทูป</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /* background-image: url('https://as2.ftcdn.net/v2/jpg/04/76/62/83/1000_F_476628356_IRjlnHVIEfIkm6tJDbZTkZh4p7Acsiys.jpg'); */
+            background-size: cover; /* Adjust to your needs */
+            background-repeat: no-repeat;
+        }
+
+        h1 {
+            background-color: #ff5733;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            color: rgb(0, 0, 0);
+            padding: 20px;
+            text-align: center;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-analyze {
+            width: 100%;
+            background-color: #ff5733;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-analyze:hover {
+            background-color: #e64d2d;
+        }
+
+        .btn-analyze:focus {
+            outline: none; /* Remove the outline when the button is clicked */
+        }
+    </style>
+</head>
+<body>
+    <h1>การวิเคราะห์ความรู้สึกจากข้อคิดเห็นของคลิปวีดีโอบน YouTube</h1>
+    <h2>ผู้จัดทำ [ชิษณุพงศ์ นันท์ตา] [ภาณุมาศ แสงทอง] [พัสกร ธานี]</h2>
+    <div class="container">
+        <form method="POST" class="mt-5">
+            <div class="mb-3">
+                <label for="video_url" class="form-label">ป้อน URL วิดีโอ YouTube:</label>
+                <input type="text" name="video_url" id="video_url" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-analyze">วิเคราะห์</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

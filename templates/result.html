@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ผลการวิเคราะห์วีดีโอ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <style>
+        body {
+            background-image: url('your-background-image.jpg');
+            background-size: cover;
+            /* Adjust to your needs */
+            background-repeat: no-repeat;
+        }
+
+        .comment-list {
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .list-group-item {
+            background-color: #ffffff;
+            /* สีพื้นหลังเริ่มต้น */
+            border-color: #ccc;
+            /* สีขอบเริ่มต้น */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            /* เพิ่ม transition */
+        }
+
+        .red {
+            background-color: #dc3545;
+            /* Set the background color for 'neg' sentiment */
+            color: white;
+            /* Set the text color to white for better contrast */
+        }
+
+        .blue {
+            background-color: #0d6efd;
+            /* Set the background color for 'neu' sentiment */
+            color: white;
+            /* Set the text color to white for better contrast */
+        }
+
+        .green {
+            background-color: #198754;
+            /* Set the background color for 'pos' sentiment */
+            color: white;
+            /* Set the text color to white for better contrast */
+        }
+
+        .back-button {
+            margin-top: 20px;
+        }
+
+        .d-flex-justify-content-center {
+            height: 150px;
+            width: 150px;
+        }
+
+        h3 {
+            background-color: #ff5733;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="\"><h3>ผลการวิเคราะห์วีดีโอ</h3></a>
+    <div class="container mt-4">
+        <h1 class="display-4">ผลการวิเคราะห์สำหรับรหัสวิดีโอ: {{ video_id }}</h1>
+
+        <h2 class="mt-4">เปอร์เซ็นต์ความรู้สึก:</h2>
+        <div class="d-flex-justify-content-center">
+            <canvas id="sentimentChart" width="150" height="150"></canvas>
+        </div>
+
+        <h2 class="mt-4">การวิเคราะห์ความรู้สึกของแต่ละความคิดเห็น:</h2>
+        <div class="alert alert-info" role="alert">
+            <strong>จำนวนความคิดเห็นทั้งหมด: {{ total_comments }}</strong>
+            <label>
+                <input type="checkbox" id="filterPos"> Positive
+            </label>
+            <label>
+                <input type="checkbox" id="filterNeg"> Negative
+            </label>
+            <label>
+                <input type="checkbox" id="filterNeu"> Neutral
+            </label>
+        </div>
+        <div class="comment-list">
+            <ul class="list-group">
+                <ul class="list-group">
+                    {% for result in sentiment_results %}
+                    <li class="list-group-item {% if result.sentiment_label == 'neg' %}red{% elif result.sentiment_label == 'neu' %}blue{% elif result.sentiment_label == 'pos' %}green{% endif %}"
+                        data-sentiment-label="{{ result.sentiment_label }}">
+                        <h5 class="mb-3">ความคิดเห็นที่: {{ loop.index }}</h5>
+                        <strong>ความคิดเห็น:</strong> {{ result.comment }}<br>
+                        {% if result.lang2 == 1 %}
+                        <strong>ป้ายชื่อความรู้สึก(TH):</strong> {{ result.sentiment_label }}<br>
+                        {% else %}
+                        <strong>ป้ายชื่อความรู้สึก(EN-other):</strong> {{ result.sentiment_label }}<br>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>                
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('sentimentChart').getContext('2d');
+
+        var sentimentData = {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [{
+                data: [{{ sentiment_percentages.positive_percentage }}, {{ sentiment_percentages.negative_percentage }}, {{ sentiment_percentages.neutral_percentage }}],
+        backgroundColor: ['#4CAF50', '#F44336', '#2196F3'],
+            }]
+        };
+
+        var sentimentChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: sentimentData,
+            options: {
+                cutout: '50%', // Adjust the cutout size as needed
+                plugins: {
+                    legend: {
+                        display: false,
+                    }
+                }
+            }
+        });
+
+        function updateFilter() {
+            const filterPos = document.getElementById("filterPos").checked;
+            const filterNeg = document.getElementById("filterNeg").checked;
+            const filterNeu = document.getElementById("filterNeu").checked;
+
+            const listItems = document.querySelectorAll(".list-group-item");
+
+            listItems.forEach((item) => {
+                const sentimentLabel = item.getAttribute("data-sentiment-label");
+
+                if ((filterPos && sentimentLabel === "pos") ||
+                    (filterNeg && sentimentLabel === "neg") ||
+                    (filterNeu && sentimentLabel === "neu")) {
+                    item.style.display = "block"; // Show the item
+                } else {
+                    item.style.display = "none"; // Hide the item
+                }
+            });
+        }
+
+        // Add event listeners to toggle switches
+        document.getElementById("filterPos").addEventListener("change", updateFilter);
+        document.getElementById("filterNeg").addEventListener("change", updateFilter);
+        document.getElementById("filterNeu").addEventListener("change", updateFilter);
+
+        // Initial call to set the filter
+        updateFilter();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
